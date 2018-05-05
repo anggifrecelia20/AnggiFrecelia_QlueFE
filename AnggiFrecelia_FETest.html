@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title></title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+ 
+      
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    
+/* Style the header */
+.header {
+    background-color: #f1f1f1;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Style the top navigation bar */
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+/* Style the topnav links */
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 30%;
+    padding: 15px;
+}.column1 {
+    float: left;
+    width: 60%;
+    padding: 15px;
+}
+
+
+
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    
+}
+
+/* Style inputs, select elements and textareas */
+input[type=text], select, textarea{
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #3399ff;
+  border-radius: 12px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+/* Style the label to display next to the inputs */
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+/* Style the submit button */
+input[type=submit] {
+  background-color: #4d4dff;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  float: center;
+}
+
+
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+
+
+/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+@media screen and (max-width:600px) {
+    .column {
+        width: 100%;
+    }
+}
+</style>
+</head>
+<body>
+
+<br>
+
+<div class="row">
+  <div class="column">
+   <center style="color:blue;"> <h2>Here Comes The sun</h2></center>
+    <center style="color:blue;"> <p>dududududu..</p> </center>
+     <center style="color:blue;"><p>Type the list and longitude.....</p> </center>
+  
+<!-- <form  method="post" class="form-inline"> -->
+ 
+  <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" name="sunrise" style="color:blue;" value="Sunrise: 6:13:44 AM(WIB)" readonly> 
+
+  <br> <br> 
+  <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+    
+    <input type="text" class="form-control" id="inlineFormInputGroup" name="sunrise" style="color:blue;" value="Sunset: 6:26:26 PM (WIB)" readonly >
+  </div>
+
+  <div class="form-check mb-2 mr-sm-2 mb-sm-0">
+    <label class="form-check-label">
+     
+    </label>
+  </div>
+
+   <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="lat" style="color:#99A3A4;"  >
+
+  <br> <br> 
+  <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+    
+    <input type="text" class="form-control" id="lng" style="color:#99A3A4  ;"   >
+  </div>
+
+  <div class="form-check mb-2 mr-sm-2 mb-sm-0">
+    <label class="form-check-label">
+     
+    </label>
+  </div>
+
+
+   <button value="Process" id="submitButton">Process</button>
+<!-- </form> -->
+</div>
+  <div class="column1">
+    
+    <div id="map" style="width:100%;height:400px;">
+      
+    </div>
+    <script>
+      //untuk memasukkan lattitude dan longitude
+      const submitButton = document.getElementById('submitButton');
+      submitButton.addEventListener('click', function(event){
+        const lat = document.getElementById('lat').value;
+        const lng = document.getElementById('lng').value;
+
+        setCenter(lat, lng);
+      })
+
+      function setCenter(lat, lng) {
+        var center = {lat: lat, lng: lng};
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.HYBRID,
+            center: center
+        });
+
+        console.log('done');
+      }
+
+      function initMap() {
+        var del = {lat: 2.385674, lng: 99.148033};
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.HYBRID,
+            center: del
+        });
+        var infoWindow = new google.maps.InfoWindow({map: map});
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+      }
+
+
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBiho-u9yCr6HbeJhxDdgUsIKmPjWphfm4&callback=initMap">
+    </script>
+  </div>
+</div>
+</body>
+
+</html>
